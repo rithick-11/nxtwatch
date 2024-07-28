@@ -71,7 +71,7 @@ const NxtVideoDetial = () => {
 
   useEffect(() => {
     getVideoDetail()
-  },[])
+  })
 
   const renderFailView = () => (
     <NxtWatchContext.Consumer>
