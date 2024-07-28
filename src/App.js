@@ -1,25 +1,67 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import NxtWatchContext from './contexts/NxtWatchContext'
+
+import Login from './Pages/Login'
+import ProtectedRoute from './components/ProtectedRoute'
+import Home from './Pages/Home'
+import Trending from './Pages/Trending'
+import Gaming from './Pages/Gaming'
+// import SavedVideos from './Pages/SavedVideos'
+import NxtVideoDetial from './Pages/NxtVideoDetial'
+import NotFound from './Pages/NotFound'
+import Inprogress from './components/Inprogress';
+
+class App extends Component {
+  state = {dark: false, saveList: []}
+
+  setDark = () => {
+    this.setState(pre => ({dark: !pre.dark}))
+  }
+
+  setSaveList = video => {
+    const {saveList} = this.state
+    const isPresent = saveList.some(each => each.id === video.id)
+    if (isPresent) {
+      console.log('exist on save list')
+      this.setState(pre => ({
+        saveList: pre.saveList.filter(each => each.id !== video.id),
+      }))
+    } else {
+      this.setState(pre => ({saveList: [...pre.saveList, video]}))
+    }
+  }
+
+
+
+  render() {
+    const {dark, saveList} = this.props
+    return (
+      <NxtWatchContext.Provider
+        value={{
+          dark,
+          saveList,
+          setDark: this.setDark,
+          setSaveList: this.setSaveList,
+        }}
+      >
+        <BrowserRouter>
+          <Routes>
+            <Route exact path="/login" element={<Login />} />
+            <Route element={<ProtectedRoute />}>
+              <Route exact path='/' element={<Home />} />
+              <Route exact path="/trending" element={<Trending />} />
+              <Route exact path="/gaming" element={<Gaming />} />
+              <Route exact path="/saved-videos" element={<Inprogress  />} />
+              <Route exact path="/videos/:id" element={<NxtVideoDetial />} />
+            </Route>
+            <Route element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </NxtWatchContext.Provider>
+    )
+  }
 }
 
-export default App;
+export default App
