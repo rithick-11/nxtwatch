@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Routes, Route, HashRouter } from "react-router-dom";
+import {Routes, Route, BrowserRouter } from "react-router-dom";
 
 import NxtWatchContext from './contexts/NxtWatchContext'
 
@@ -46,7 +46,7 @@ class App extends Component {
           setSaveList: this.setSaveList,
         }}
       >
-        <HashRouter>
+        <BrowserRouter basename='nxtwatch'>
           <Routes>
             <Route exact path="/login" element={<Login />} />
             <Route element={<ProtectedRoute />}>
@@ -58,7 +58,7 @@ class App extends Component {
             </Route>
             <Route element={<NotFound />} />
           </Routes>
-        </HashRouter>
+        </BrowserRouter>
       </NxtWatchContext.Provider>
     )
   }
